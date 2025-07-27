@@ -17,10 +17,18 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      - name: Build image
-        run: docker build -t "${{ secrets.DOCKERHUB_USERNAME }}/devops1-app:latest" .
+      - name: Build & Push image
+        run: |
+          # Trim trailing newline from USERNAME
+          USERNAME=$(echo -n "${{ secrets.DOCKERHUB_USERNAME }}")
+          IMAGE="$USERNAME/devops1-app:latest"
 
-      - name: Push image
-        run: docker push "${{ secrets.DOCKERHUB_USERNAME }}/devops1-app:latest"
+          echo "Building $IMAGE"
+          docker build -t "$IMAGE" .
+
+          echo "Pushing $IMAGE"
+          docker push "$IMAGE"
+        shell: bash
