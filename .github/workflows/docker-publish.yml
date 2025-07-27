@@ -16,15 +16,19 @@ jobs:
 
       - name: Log in to Docker Hub
         run: |
-          echo "${{ secrets.DOCKERHUB_TOKEN }}" \
+          printf '%s' "${{ secrets.DOCKERHUB_TOKEN }}" \
             | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
         shell: bash
 
       - name: Build & Push Image
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/devops1-app:latest"
+          # Trim any newline from username
+          USERNAME=$(printf '%s' "${{ secrets.DOCKERHUB_USERNAME }}")
+          IMAGE="$USERNAME/devops1-app:latest"
+
           echo "Building $IMAGE from ./app..."
           docker build -t "$IMAGE" -f app/Dockerfile app
+
           echo "Pushing $IMAGE"
           docker push "$IMAGE"
         shell: bash
