@@ -1,28 +1,32 @@
-name: Debug Docker Login
+name: Build & Push Docker Image
 
-# Тригер — ручний запуск з UI
 on:
-  workflow_dispatch:
+  push:
+    branches: [ main ]
 
 jobs:
-  debug-login:
+  build-and-push:
     runs-on: ubuntu-latest
-    env:
-      # Передаємо секрети в змінні середовища
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Show secret presence and length
-        run: |
-          echo "🛡️ DOCKER_USERNAME set? $( [ -z \"$DOCKER_USERNAME\" ] && echo no || echo yes )"
-          echo "🔢 DOCKER_USERNAME length: $(echo -n \"$DOCKER_USERNAME\" | wc -c)"
-          echo "🛡️ DOCKER_PASSWORD set? $( [ -z \"$DOCKER_PASSWORD\" ] && echo no || echo yes )"
-          echo "🔢 DOCKER_PASSWORD length: $(echo -n \"$DOCKER_PASSWORD\" | wc -c)"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Manual Docker login
+      - name: Debug: show token length
         run: |
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          echo -n "${{ secrets.DOCKERHUB_TOKEN }}" | wc -c
+
+      - name: Log in to Docker Hub (CLI)
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build and push image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: sterben007/devops1-app:latest
