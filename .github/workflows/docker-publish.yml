@@ -1,34 +1,19 @@
-name: Build & Push Docker Image
+# .github/workflows/test-docker-login.yml
+name: Test Docker Hub Login
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
-  build-and-push:
+  login-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Debug show token length
+      - name: Test Docker login
         run: |
-          echo -n "${{ secrets.DOCKERHUB_TOKEN }}" | wc -c
-
-      - name: Log in to Docker Hub via CLI
-        run: |
-          echo "${{ secrets.DOCKERHUB_TOKEN }}" \
-            | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-
-      - name: Build and push image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: sterben007/devops1-app:latest
+          echo "Спроба входу в Docker Hub…"
+          docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
+        shell: bash
