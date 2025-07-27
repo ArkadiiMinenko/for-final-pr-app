@@ -1,3 +1,13 @@
+# .github/workflows/debug-docker-login.yml
+name: Debug Docker Login
+
+# Тригерити вручну або на пуш в main — оберіть потрібне
+on:
+  workflow_dispatch:
+  # -- або --
+  # push:
+  #   branches: [ main ]
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
