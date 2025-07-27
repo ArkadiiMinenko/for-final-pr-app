@@ -1,21 +1,41 @@
-# .github/workflows/test-docker-login.yml
-name: Test Docker Hub Login
+# .github/workflows/debug-docker-creds.yml
+name: Debug Docker Hub Credentials
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  login-test:
+  debug-creds:
     runs-on: ubuntu-latest
+    env:
+      # Тут беремо ті ж секрети, що й у production workflow
+      DH_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+      DH_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - name: Test Docker login
+      - name: Show DH_USER length
         run: |
-          echo "Спроба входу в Docker Hub…"
-          docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
+          if [ -z "$DH_USER" ]; then
+            echo "🚨 DH_USER is empty!"
+            exit 1
+          fi
+          echo "🔢 DH_USER length: $(echo -n "$DH_USER" | wc -c)"
+
+      - name: Show DH_TOKEN length
+        run: |
+          if [ -z "$DH_TOKEN" ]; then
+            echo "🚨 DH_TOKEN is empty!"
+            exit 1
+          fi
+          echo "🔢 DH_TOKEN length: $(echo -n "$DH_TOKEN" | wc -c)"
+
+      - name: Attempt Docker login via stdin
+        run: |
+          printf '%s' "$DH_TOKEN" | docker login --username "$DH_USER" --password-stdin
         shell: bash
