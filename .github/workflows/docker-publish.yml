@@ -1,13 +1,14 @@
-# .github/workflows/debug-docker-login.yml
 name: Debug Docker Login
 
+# Тригер — ручний запуск з UI
 on:
-  workflow_dispatch:  # дозволяє запускати вручну з UI Actions
+  workflow_dispatch:
 
 jobs:
-  build-and-push:
+  debug-login:
     runs-on: ubuntu-latest
     env:
+      # Передаємо секрети в змінні середовища
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -15,13 +16,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Debug secret presence and length
+      - name: Show secret presence and length
         run: |
-          echo "DOCKER_USERNAME set? $( [ -z \"$DOCKER_USERNAME\" ] && echo no || echo yes )"
-          echo "DOCKER_USERNAME length: $(echo -n \"$DOCKER_USERNAME\" | wc -c)"
-          echo "DOCKER_PASSWORD set? $( [ -z \"$DOCKER_PASSWORD\" ] && echo no || echo yes )"
-          echo "DOCKER_PASSWORD length: $(echo -n \"$DOCKER_PASSWORD\" | wc -c)"
+          echo "🛡️ DOCKER_USERNAME set? $( [ -z \"$DOCKER_USERNAME\" ] && echo no || echo yes )"
+          echo "🔢 DOCKER_USERNAME length: $(echo -n \"$DOCKER_USERNAME\" | wc -c)"
+          echo "🛡️ DOCKER_PASSWORD set? $( [ -z \"$DOCKER_PASSWORD\" ] && echo no || echo yes )"
+          echo "🔢 DOCKER_PASSWORD length: $(echo -n \"$DOCKER_PASSWORD\" | wc -c)"
 
-      - name: Manual Docker login (debug)
+      - name: Manual Docker login
         run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
