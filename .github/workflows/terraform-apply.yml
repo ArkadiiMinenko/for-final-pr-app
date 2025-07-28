@@ -1,3 +1,4 @@
+# .github/workflows/terraform-apply.yml
 name: Terraform Apply
 
 on:
@@ -6,6 +7,7 @@ on:
       - main
     paths:
       - 'EKS/**'
+  workflow_dispatch:
 
 jobs:
   terraform:
