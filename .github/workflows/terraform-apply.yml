@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: src/EKS
+        working-directory: EKS
 
     steps:
       - name: Checkout repository
