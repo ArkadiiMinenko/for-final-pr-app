@@ -1,4 +1,5 @@
 variable "name" {
+    default = "arkadii"
 }
 #variable "vpc_cidr" {
 #}
@@ -24,4 +25,9 @@ variable "iam_profile" {
 }
 
 variable "zone_name" {
+}
+
+variable "external_dns_policy_name" {
+  type    = string
+  default = "external-dns-irsa-external-dns"
 }

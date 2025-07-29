@@ -1,4 +1,3 @@
-# For cluster
 resource "aws_iam_role" "cluster" {
   name = "${var.name}-eks-role"
 
@@ -73,7 +72,7 @@ POLICY
 }
 
 resource "aws_iam_policy" "secrets_policy" {
-  name        = "GetSecrets"
+  name        = "${var.name}-GetSecrets-arkadii"
   path        = "/"
   description = "Policy to read aws secrets"
 

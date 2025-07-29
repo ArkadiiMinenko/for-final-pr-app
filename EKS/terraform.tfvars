@@ -3,7 +3,7 @@ region = "eu-central-1"
 
 # General for all infrastructure
 # This is the name prefix for all infra components
-name = "danit"
+name = "arkadii"
 
 
 #vpc_id      = "vpc-06ae62935ffb33e2b"
