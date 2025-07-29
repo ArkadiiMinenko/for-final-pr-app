@@ -29,10 +29,14 @@ variable "zone_name" {
 
 variable "external_dns_policy_name" {
   type    = string
+<<<<<<< HEAD
   default = "external-dns-irsa-external-dns-arkadii"
 }
 
 variable "admin_password_bcrypt" {
   description = "bcrypt-хеш пароля для ArgoCD admin"
   type        = string
+=======
+  default = "external-dns-irsa-external-dns"
+>>>>>>> c4b68d66763e7a055b833a6708ed193cd3f73e87
 }
