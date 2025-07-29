@@ -33,8 +33,9 @@ resource "aws_eks_addon" "coredns" {
 }
 
 module "argocd" {
-  source            = "./modules/argocd"
-  hostname          = "argocd.arkadii.devops7.test-danit.com"
-  helm_release_name = "argocd"
-  namespace         = "argocd"
+  source             = "./modules/argocd"
+  hostname           = "argocd.arkadii.devops7.test-danit.com"
+  helm_release_name  = "argocd"
+  namespace          = "argocd"
+  admin_password_bcrypt = var.admin_password_bcrypt
 }
