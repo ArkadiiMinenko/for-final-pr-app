@@ -10,3 +10,7 @@ server:
     paths:
       - /
     pathType: Prefix
+
+configs:
+  secret:
+    createSecret: true
