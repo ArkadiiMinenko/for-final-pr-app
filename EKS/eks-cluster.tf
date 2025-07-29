@@ -27,7 +27,7 @@ resource "aws_eks_addon" "coredns" {
   #addon_version               = "v1.11.1-eksbuild.4"
   #addon_version		      = "v1.11.3-eksbuild.1"
   addon_version               = "v1.12.2-eksbuild.4"
-  resolve_conflicts_on_create = "OVERWRITE"
+  #resolve_conflicts_on_create = "OVERWRITE"
 
   depends_on = [aws_eks_node_group.danit-amd]
 }
@@ -37,5 +37,4 @@ module "argocd" {
   hostname           = "argocd.arkadii.devops7.test-danit.com"
   helm_release_name  = "argocd"
   namespace          = "argocd"
-  admin_password_bcrypt = var.admin_password_bcrypt
 }
