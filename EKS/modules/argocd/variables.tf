@@ -15,11 +15,6 @@ variable "hostname" {
   type        = string
 }
 
-variable "hostname" {
-  description = "DNS hostname for ArgoCD"
-  type        = string
-}
-
 variable "admin_password_bcrypt" {
   description = "хеш пароля для ArgoCD admin"
   type        = string
