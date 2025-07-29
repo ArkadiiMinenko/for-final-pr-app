@@ -22,9 +22,6 @@ terraform.tfvars
 Thumbs.db
 .vscode/
 .Trashes
-<<<<<<< HEAD
 .zip
 .env
-=======
-.zip
->>>>>>> c4b68d66763e7a055b833a6708ed193cd3f73e87
+
