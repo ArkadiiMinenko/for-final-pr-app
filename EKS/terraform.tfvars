@@ -23,8 +23,5 @@ tags = {
 }
 
 zone_name = "devops7.test-danit.com"
-<<<<<<< HEAD
 
 admin_password_bcrypt = getenv("ARGOCD_ADMIN_PASSWORD_BCRYPT")
-=======
->>>>>>> c4b68d66763e7a055b833a6708ed193cd3f73e87
