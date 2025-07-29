@@ -4,7 +4,6 @@ server:
   ingress:
     enabled: true
     ingressClassName: nginx
-<<<<<<< HEAD
     hostname: ${hostname}
     annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -21,11 +20,3 @@ configs:
   secret:
     argocdServerAdminPassword: "${admin_password_bcrypt}"
     createSecret: false
-=======
-    hostname: argocd.arkadii.devops7.test-danit.com
-    annotations:
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    paths:
-      - /
-    pathType: Prefix
->>>>>>> c4b68d66763e7a055b833a6708ed193cd3f73e87
