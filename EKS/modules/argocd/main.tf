@@ -1,16 +1,15 @@
 resource "helm_release" "argocd" {
-  name             = var.helm_release_name
+  name             = "argocd"
   namespace        = var.namespace
+  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-cd"
+  version          = "5.46.8"
   create_namespace = true
-
-  force_update = true
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argo-cd"
-  version    = "5.46.8"
 
   values = [
     templatefile("${path.module}/values.yaml", {
-      hostname = var.hostname
+      hostname        = var.hostname
+      admin_password  = var.admin_password_bcrypt
     })
   ]
 }
