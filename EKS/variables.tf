@@ -38,7 +38,3 @@ variable "external_dns_policy_name" {
   type    = string
   default = "external-dns-irsa-external-dns-arkadii"
 }
-
-variable "admin_password_bcrypt" {
-  type = string
-}
