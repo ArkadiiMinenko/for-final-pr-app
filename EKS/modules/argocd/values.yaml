@@ -19,4 +19,4 @@ server:
 configs:
   secret:
     argocdServerAdminPassword: "${admin_password_bcrypt}"
-    createSecret: false
+    createSecret: true
