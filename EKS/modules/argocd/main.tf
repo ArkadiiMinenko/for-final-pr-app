@@ -8,8 +8,8 @@ resource "helm_release" "argocd" {
 
   values = [
     templatefile("${path.module}/values.yaml", {
-      hostname        = var.hostname
-      admin_password  = var.admin_password_bcrypt
+      hostname               = var.hostname
+      admin_password_bcrypt = var.admin_password_bcrypt
     })
   ]
 }
