@@ -1,13 +1,10 @@
 output "argocd_admin_password" {
-  description = "Default admin password from argocd-secret"
-  value = nonsensitive(
-    base64decode(
-      kubernetes_secret.argocd_secret.data["admin.password"]
-    )
-  )
+  value       = base64decode(data.kubernetes_secret.argocd_secret.data["admin.password"])
+  sensitive   = true
+  description = "Admin password for ArgoCD"
 }
 
 output "argocd_url" {
-  description = "ArgoCD external address"
-  value = "https://${kubernetes_ingress_v1.argocd_server.status[0].load_balancer[0].ingress[0].hostname}"
+  value       = "https://${data.kubernetes_ingress_v1.argocd_ingress.status[0].load_balancer[0].ingress[0].hostname}"
+  description = "External URL of ArgoCD"
 }
