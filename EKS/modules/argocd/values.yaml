@@ -1,0 +1,12 @@
+server:
+  extraArgs:
+    - --insecure
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hostname: argocd.arkadii.devops7.test-danit.com
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    paths:
+      - /
+    pathType: Prefix

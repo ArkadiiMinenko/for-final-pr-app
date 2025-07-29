@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    repoURL: 'https://github.com/<твоє-ім’я>/your-repo.git'
+    repoURL: 'https://github.com/ArkadiiMinenko/for-final-pr-app.git'
     targetRevision: HEAD
     path: app
   syncPolicy:
