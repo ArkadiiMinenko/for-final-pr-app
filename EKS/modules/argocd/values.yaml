@@ -7,16 +7,10 @@ server:
     hostname: ${hostname}
     annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
     paths:
       - /
     pathType: Prefix
-    tls:
-      - hosts:
-          - ${hostname}
-        secretName: argocd-tls
 
 configs:
   secret:
-    argocdServerAdminPassword: "${admin_password_bcrypt}"
-    createSecret: true
+    createSecret: false

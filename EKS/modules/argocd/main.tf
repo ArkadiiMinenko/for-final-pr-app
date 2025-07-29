@@ -8,8 +8,25 @@ resource "helm_release" "argocd" {
 
   values = [
     templatefile("${path.module}/values.yaml", {
-      hostname               = var.hostname
-      admin_password_bcrypt = var.admin_password_bcrypt
+      hostname = var.hostname
     })
   ]
+}
+
+data "kubernetes_secret" "argocd_secret" {
+  metadata {
+    name      = "argocd-secret"
+    namespace = var.namespace
+  }
+
+  depends_on = [helm_release.argocd]
+}
+
+data "kubernetes_ingress_v1" "argocd_ingress" {
+  metadata {
+    name      = "argocd-server"
+    namespace = var.namespace
+  }
+
+  depends_on = [helm_release.argocd]
 }
