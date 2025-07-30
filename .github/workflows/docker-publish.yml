@@ -37,4 +37,11 @@ jobs:
 
       - name: Update deployment.yaml with new tag
         run: |
-          sed -i "s|image: .*/devops1-app:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/devops1-app:$SHORT_TAG|" app/deployment.yaml
+          USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
+          USERNAME="${USERNAME//$'\n'/}"
+          USERNAME="${USERNAME//$'\r'/}"
+
+          IMAGE="$USERNAME/devops1-app:$SHORT_TAG"
+          echo "Replacing image with: $IMAGE"
+          sed -i "s#image: .*/devops1-app:.*#image: $IMAGE#" app/deployment.yaml
+        shell: bash
