@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: FinalProjectApp
+  name: final-project-app
   namespace: argocd
 spec:
   project: default
