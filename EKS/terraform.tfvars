@@ -5,7 +5,7 @@ region = "eu-central-1"
 # This is the name prefix for all infra components
 name = "arkadii"
 
-
+group = "devops7"
 #vpc_id      = "vpc-06ae62935ffb33e2b"
 #subnets_ids = ["subnet-0b27929ad2896d99f", "subnet-0c15a8c6856de7853", "subnet-01a5c422124b1c69e"]
 

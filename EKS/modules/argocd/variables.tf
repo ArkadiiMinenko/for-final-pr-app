@@ -25,3 +25,7 @@ variable "name" {
   type        = string
 }
 
+variable "group" {
+  description = "DNS group name"
+  type        = string
+}

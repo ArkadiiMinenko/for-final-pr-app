@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.region
+}
+
 resource "aws_eks_cluster" "danit" {
   name     = var.name
   role_arn = aws_iam_role.cluster.arn
@@ -11,10 +15,10 @@ resource "aws_eks_cluster" "danit" {
     aws_iam_role_policy_attachment.kubeedge-cluster-AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.kubeedge-cluster-AmazonEKSVPCResourceController,
   ]
-  tags = merge(
-    var.tags,
-    { Name = "${var.name}" }
-  )
+
+  tags = merge(var.tags, {
+    Name = var.name
+  })
 }
 
 data "aws_eks_cluster_auth" "danit" {
@@ -22,23 +26,28 @@ data "aws_eks_cluster_auth" "danit" {
 }
 
 resource "aws_eks_addon" "coredns" {
-  cluster_name                = var.name
-  addon_name                  = "coredns"
-  #addon_version               = "v1.11.1-eksbuild.4"
-  #addon_version		      = "v1.11.3-eksbuild.1"
-  addon_version               = "v1.12.2-eksbuild.4"
-  #resolve_conflicts_on_create = "OVERWRITE"
+  cluster_name    = var.name
+  addon_name      = "coredns"
+  addon_version   = "v1.12.2-eksbuild.4"
+  depends_on      = [aws_eks_node_group.danit-amd]
+}
 
-  depends_on = [aws_eks_node_group.danit-amd]
+resource "null_resource" "update_kubeconfig" {
+  provisioner "local-exec" {
+    command = "aws eks update-kubeconfig --region ${var.region} --name ${var.name}"
+  }
+
+  depends_on = [aws_eks_cluster.danit]
 }
 
 module "argocd" {
-  source    = "./modules/argocd"
-  hostname  = "argocd.arkadii.devops7.test-danit.com"
-  namespace = "argocd"
-  helm_release_name = "argocd"
-  region    = var.region
-  name      = var.name
+  source             = "./modules/argocd"
+  hostname           = "argocd.${var.name}.${var.group}.test-danit.com"
+  namespace          = "argocd"
+  helm_release_name  = "argocd"
+  region             = var.region
+  name               = var.name
+  group              = var.group
 
-  depends_on = [aws_eks_cluster.danit]
+  depends_on = [null_resource.update_kubeconfig]
 }

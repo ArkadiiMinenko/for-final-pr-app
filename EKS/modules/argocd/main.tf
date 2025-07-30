@@ -31,14 +31,6 @@ data "kubernetes_ingress_v1" "argocd_ingress" {
   depends_on = [helm_release.argocd]
 }
 
-resource "null_resource" "update_kubeconfig" {
-  provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --region eu-central-1 --name arkadii"
-  }
-
-  depends_on = [module.eks-cluster]
-}
-
 resource "null_resource" "apply_argocd_app" {
   depends_on = [
     helm_release.argocd,

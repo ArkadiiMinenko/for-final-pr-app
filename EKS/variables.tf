@@ -38,3 +38,8 @@ variable "external_dns_policy_name" {
   type    = string
   default = "external-dns-irsa-external-dns-arkadii"
 }
+
+variable "group" {
+  description = "DNS group name"
+  type        = string
+}
