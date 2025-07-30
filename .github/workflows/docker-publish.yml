@@ -8,43 +8,33 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set TAG from commit SHA
-        run: echo "TAG=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+      - name: Generate short image tag from commit SHA
+        run: echo "SHORT_TAG=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
       - name: Docker login
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 
       - name: Build & Push Docker image
-        env:
-          DOCKER_BUILDKIT: 0
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          TAG: ${{ github.sha }}
         run: |
-          SHORT_TAG=$(echo $TAG | cut -c1-7)
+          echo "Tagging as: $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG"
           docker build -t $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG -f app/Dockerfile app/
           docker push $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG
 
-          echo "SHORT_TAG=$SHORT_TAG" >> $GITHUB_ENV
-
-
-
-
       - name: Update deployment.yaml with new tag
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          SHORT_TAG: ${{ env.SHORT_TAG }}
         run: |
           sed -i "s|image: .*/devops1-app:.*|image: $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG|" app/deployment.yaml
-
 
       - name: Commit & Push updated YAML
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add app/deployment.yaml
-          git commit -m "Update image tag to ${TAG}"
+          git commit -m "Update image tag to $SHORT_TAG"
           git push
