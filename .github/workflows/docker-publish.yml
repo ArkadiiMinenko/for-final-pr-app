@@ -15,7 +15,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Generate short image tag from commit SHA
+      - name: Set SHORT_TAG from commit SHA
+        id: vars
         run: echo "SHORT_TAG=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
       - name: Docker login
@@ -23,15 +24,15 @@ jobs:
 
       - name: Build & Push Docker image
         run: |
-          echo "Tagging as: $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG"
+          echo "Building image: $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG"
           docker build -t $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG -f app/Dockerfile app/
           docker push $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG
 
-      - name: Update deployment.yaml with new tag
+      - name: Update deployment.yaml with new image tag
         run: |
           sed -i "s|image: .*/devops1-app:.*|image: $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG|" app/deployment.yaml
 
-      - name: Commit & Push updated YAML
+      - name: Commit & Push updated deployment.yaml
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
