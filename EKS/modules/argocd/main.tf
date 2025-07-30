@@ -43,4 +43,6 @@ resource "null_resource" "update_kubeconfig" {
   provisioner "local-exec" {
     command = "aws eks update-kubeconfig --region ${var.region} --name ${var.name}"
   }
+
+  depends_on = [aws_eks_cluster.eks_cluster]
 }
