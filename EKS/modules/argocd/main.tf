@@ -1,5 +1,5 @@
 resource "helm_release" "argocd" {
-  name             = "argocd"
+  name             = var.helm_release_name
   namespace        = var.namespace
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
@@ -32,14 +32,9 @@ data "kubernetes_ingress_v1" "argocd_ingress" {
 }
 
 resource "null_resource" "apply_argocd_app" {
+  depends_on = [helm_release.argocd]
+
   provisioner "local-exec" {
     command = "kubectl apply -f ${path.module}/app.yaml"
   }
-
-  depends_on = [
-    helm_release.argocd,
-    null_resource.update_kubeconfig
-  ]
 }
-
-

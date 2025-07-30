@@ -37,4 +37,6 @@ module "argocd" {
   hostname           = "argocd.arkadii.devops7.test-danit.com"
   helm_release_name  = "argocd"
   namespace          = "argocd"
+
+  depends_on = [null_resource.update_kubeconfig]
 }
