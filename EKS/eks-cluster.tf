@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 resource "aws_eks_cluster" "danit" {
   name     = var.name
   role_arn = aws_iam_role.cluster.arn
