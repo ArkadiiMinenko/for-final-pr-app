@@ -36,7 +36,7 @@ resource "null_resource" "update_kubeconfig" {
     command = "aws eks update-kubeconfig --region eu-central-1 --name arkadii"
   }
 
-  depends_on = [module.eks_cluster.aws_eks_cluster.danit]
+  depends_on = [module.eks-cluster]
 }
 
 resource "null_resource" "apply_argocd_app" {
