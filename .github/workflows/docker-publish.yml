@@ -19,12 +19,19 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Build & Push Docker image
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          TAG: ${{ env.TAG }}
         run: |
-              docker build -t myimage:tag -f app/Dockerfile app/
+          docker build -t $DOCKERHUB_USERNAME/devops1-app:$TAG -f app/Dockerfile app/
+          docker push $DOCKERHUB_USERNAME/devops1-app:$TAG
 
       - name: Update deployment.yaml with new tag
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          TAG: ${{ env.TAG }}
         run: |
-          sed -i "s|image: .*/devops1-app:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/devops1-app:${TAG}|" app/deployment.yaml
+          sed -i "s|image: .*/devops1-app:.*|image: $DOCKERHUB_USERNAME/devops1-app:$TAG|" app/deployment.yaml
 
       - name: Commit & Push updated YAML
         run: |
