@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: sterben007/devops1-app:9512a8c
+          image: sterben007/devops1-app:3547ed1
           ports:
             - containerPort: 8000
 
