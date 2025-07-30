@@ -20,12 +20,11 @@ jobs:
 
       - name: Build & Push Docker image
         env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          TAG: ${{ env.TAG }}
+          DOCKER_BUILDKIT: 0
         run: |
-          export DOCKER_BUILDKIT=0
           docker build -t $DOCKERHUB_USERNAME/devops1-app:$TAG -f app/Dockerfile app/
           docker push $DOCKERHUB_USERNAME/devops1-app:$TAG
+
 
       - name: Update deployment.yaml with new tag
         env:
