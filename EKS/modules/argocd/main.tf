@@ -13,6 +13,15 @@ resource "helm_release" "argocd" {
   ]
 }
 
+resource "null_resource" "argocd_app" {
+  depends_on = [helm_release.argocd]
+
+  provisioner "local-exec" {
+    command = "kubectl apply -f ${path.module}/app.yaml -n argocd"
+  }
+}
+
+
 resource "kubernetes_manifest" "argocd_app" {
   manifest = yamldecode(file("${path.module}/app.yaml"))
 }
