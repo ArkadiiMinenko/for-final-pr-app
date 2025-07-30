@@ -6,36 +6,28 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set SHORT_TAG from commit SHA
         run: echo "SHORT_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
-      - name: Docker login
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-        run: echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-
-      - name: Debug check
+      - name: Log in to Docker Hub
         run: |
-          echo "CURRENT WORKFLOW VERSION: docker-publish.yml updated"
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" \
+            | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        shell: bash
 
-      - name: Build & Push Docker image
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      - name: Build & Push Image
         run: |
-          echo "Building image: $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG"
-          docker build -t $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG -f app/Dockerfile app/
-          docker push $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG
-
-      - name: Update deployment.yaml with new tag
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        run: |
-          sed -i "s|image: .*/devops1-app:.*|image: $DOCKERHUB_USERNAME/devops1-_
+          USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
+          IMAGE="$USERNAME/devops1-app:$SHORT_TAG"
+          echo "Building $IMAGE from ./app..."
+          docker build -t "$IMAGE" -f app/Dockerfile app
+          echo "Pushing $IMAGE"
+          docker push "$IMAGE"
+        shell: bash
