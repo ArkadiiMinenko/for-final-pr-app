@@ -36,6 +36,10 @@ resource "null_resource" "apply_argocd_app" {
     command = "kubectl apply -f ${path.module}/app.yaml"
   }
 
-  depends_on = [helm_release.argocd]
+  depends_on = [
+    helm_release.argocd,
+    null_resource.update_kubeconfig
+  ]
 }
+
 
