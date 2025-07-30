@@ -6,44 +6,26 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Generate image tag from commit SHA
-        run: echo "TAG=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
-
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-
-      - name: Build & Push Docker image
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          TAG: ${{ env.TAG }}
         run: |
-          IMAGE=$DOCKERHUB_USERNAME/devops1-app:$TAG
-          docker build -t $IMAGE -f app/Dockerfile app
-          docker push $IMAGE
+          printf '%s' "${{ secrets.DOCKERHUB_TOKEN }}" \
+            | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        shell: bash
 
-      - name: Update deployment.yaml with new image tag
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          TAG: ${{ env.TAG }}
+      - name: Build & Push Image
         run: |
-          sed -i "s|image: .*/devops1-app:.*|image: $DOCKERHUB_USERNAME/devops1-app:$TAG|" app/deployment.yaml
-
-      - name: Commit and push updated deployment.yaml
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add app/deployment.yaml
-          git commit -m "Update image tag to $TAG"
-          git push
-
-
+          # Trim any newline from username
+          USERNAME=$(printf '%s' "${{ secrets.DOCKERHUB_USERNAME }}")
+          IMAGE="$USERNAME/devops1-app:latest"
+          echo "Building $IMAGE from ./app..."
+          docker build -t "$IMAGE" -f app/Dockerfile app
+          echo "Pushing $IMAGE"
+          docker push "$IMAGE"
+        shell: bash
