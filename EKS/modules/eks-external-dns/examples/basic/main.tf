@@ -108,4 +108,3 @@ module "external_dns_argo_helm" {
     "syncOptions" = ["CreateNamespace=true"]
   }
 }
-
