@@ -12,3 +12,7 @@ resource "helm_release" "argocd" {
     })
   ]
 }
+
+resource "kubernetes_manifest" "argocd_app" {
+  manifest = yamldecode(file("${path.module}/app.yaml"))
+}
