@@ -7,6 +7,7 @@ server:
     hostname: ${hostname}
     annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      external-dns.alpha.kubernetes.io/hostname: ${hostname}
     paths:
       - /
     pathType: Prefix

@@ -30,3 +30,12 @@ data "kubernetes_ingress_v1" "argocd_ingress" {
 
   depends_on = [helm_release.argocd]
 }
+
+resource "null_resource" "apply_argocd_app" {
+  provisioner "local-exec" {
+    command = "kubectl apply -f ${path.module}/app.yaml"
+  }
+
+  depends_on = [helm_release.argocd]
+}
+
