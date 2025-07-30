@@ -33,15 +33,22 @@ data "kubernetes_ingress_v1" "argocd_ingress" {
 }
 
 resource "null_resource" "apply_argocd_app" {
-  depends_on = [helm_release.argocd]
+  depends_on = [
+    helm_release.argocd,
+    null_resource.update_kubeconfig
+  ]
 
   provisioner "local-exec" {
     command = "kubectl apply -f ${path.module}/app.yaml"
   }
 }
 
+
 resource "null_resource" "update_kubeconfig" {
   provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --region ${var.region} --name ${var.name}"
+    command = "aws eks update-kubeconfig --region eu-central-1 --name arkadii"
   }
+
+  depends_on = [aws_eks_cluster.danit]
 }
+
