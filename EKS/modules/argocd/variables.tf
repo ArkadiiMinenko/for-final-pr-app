@@ -14,3 +14,4 @@ variable "hostname" {
   description = "DNS hostname for ArgoCD ingress"
   type        = string
 }
+
