@@ -17,6 +17,9 @@ resource "null_resource" "argocd_app" {
   depends_on = [helm_release.argocd]
 
   provisioner "local-exec" {
-    command = "kubectl apply -f ${path.module}/app.yaml -n argocd"
+    command = <<EOT
+      aws eks update-kubeconfig --region eu-central-1 --name arkadii-devops7 && \
+      kubectl apply -f ${path.module}/app.yaml -n argocd --validate=false
+    EOT
   }
 }
