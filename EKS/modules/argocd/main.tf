@@ -20,8 +20,3 @@ resource "null_resource" "argocd_app" {
     command = "kubectl apply -f ${path.module}/app.yaml -n argocd"
   }
 }
-
-
-resource "kubernetes_manifest" "argocd_app" {
-  manifest = yamldecode(file("${path.module}/app.yaml"))
-}
