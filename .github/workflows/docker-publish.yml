@@ -20,8 +20,7 @@ jobs:
 
       - name: Build & Push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/devops1-app:${TAG} -f app/Dockerfile app
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/devops1-app:${TAG}
+              docker build -t myimage:tag -f app/Dockerfile app/
 
       - name: Update deployment.yaml with new tag
         run: |
