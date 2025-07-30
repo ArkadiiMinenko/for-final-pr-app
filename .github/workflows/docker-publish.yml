@@ -35,3 +35,6 @@ jobs:
           docker push "$IMAGE"
         shell: bash
 
+      - name: Update deployment.yaml with new tag
+        run: |
+          sed -i "s|image: .*/devops1-app:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/devops1-app:$SHORT_TAG|" app/deployment.yaml
