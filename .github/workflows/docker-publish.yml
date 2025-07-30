@@ -21,13 +21,20 @@ jobs:
 
       - name: Build & Push Image
         run: |
-          # Trim any newline from username
           USERNAME=$(printf '%s' "${{ secrets.DOCKERHUB_USERNAME }}")
-          IMAGE="$USERNAME/devops1-app:latest"
+          TAG=$(echo "${{ github.sha }}" | cut -c1-7)
+          IMAGE="$USERNAME/devops1-app:$TAG"
 
           echo "Building $IMAGE from ./app..."
           docker build -t "$IMAGE" -f app/Dockerfile app
 
           echo "Pushing $IMAGE"
           docker push "$IMAGE"
+
+          echo "TAG=$TAG" >> $GITHUB_ENV
         shell: bash
+        
+      - name: Update deployment.yaml with new image tag
+        run: |
+          sed -i "s|image: sterben007/devops1-app:.*|image: sterben007/devops1-app:$TAG|" app/deployment.yaml
+
