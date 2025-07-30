@@ -28,14 +28,6 @@ resource "aws_eks_addon" "coredns" {
   depends_on      = [aws_eks_node_group.danit-amd]
 }
 
-resource "null_resource" "update_kubeconfig" {
-  provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --region ${var.region} --name ${var.name}"
-  }
-
-  depends_on = [aws_eks_cluster.danit]
-}
-
 module "argocd" {
   source             = "./modules/argocd"
   hostname           = "argocd.${var.name}.${var.group}.test-danit.com"
@@ -45,5 +37,4 @@ module "argocd" {
   name               = var.name
   group              = var.group
 
-  depends_on = [null_resource.update_kubeconfig]
 }
