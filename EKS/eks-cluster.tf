@@ -36,6 +36,9 @@ module "argocd" {
   source    = "./modules/argocd"
   hostname  = "argocd.arkadii.devops7.test-danit.com"
   namespace = "argocd"
+  helm_release_name = "argocd"
   region    = var.region
   name      = var.name
+
+  depends_on = [aws_eks_cluster.danit]
 }

@@ -5,6 +5,7 @@ resource "helm_release" "argocd" {
   chart            = "argo-cd"
   version          = "5.46.8"
   create_namespace = true
+  
 
   values = [
     templatefile("${path.module}/values.yaml", {
@@ -43,6 +44,4 @@ resource "null_resource" "update_kubeconfig" {
   provisioner "local-exec" {
     command = "aws eks update-kubeconfig --region ${var.region} --name ${var.name}"
   }
-
-  depends_on = [aws_eks_cluster.eks_cluster]
 }
