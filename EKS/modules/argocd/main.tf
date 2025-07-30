@@ -11,9 +11,4 @@ resource "helm_release" "argocd" {
       hostname = var.hostname
     })
   ]
-
-  postrender {
-    binary_path = "kubectl"
-    args        = ["kustomize", "${path.module}"]
-  }
 }
