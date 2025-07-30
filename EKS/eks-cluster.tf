@@ -33,10 +33,11 @@ resource "aws_eks_addon" "coredns" {
 }
 
 module "argocd" {
-  source             = "./modules/argocd"
-  hostname           = "argocd.arkadii.devops7.test-danit.com"
-  helm_release_name  = "argocd"
-  namespace          = "argocd"
+  source    = "./modules/argocd"
+  hostname  = "argocd.arkadii.devops7.test-danit.com"
+  namespace = "argocd"
+  region    = var.region
+  name      = var.name
 
-  depends_on = [null_resource.update_kubeconfig]
+  depends_on = [null_resource.update_kubeconfig] # або видалити залежно від варіанту
 }

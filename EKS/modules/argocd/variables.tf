@@ -15,3 +15,13 @@ variable "hostname" {
   type        = string
 }
 
+variable "region" {
+  description = "AWS region"
+  type        = string
+}
+
+variable "name" {
+  description = "EKS cluster name"
+  type        = string
+}
+
