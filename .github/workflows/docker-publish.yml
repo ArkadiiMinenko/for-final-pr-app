@@ -25,9 +25,13 @@ jobs:
       - name: Build & Push Image
         run: |
           USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
+          USERNAME="${USERNAME//$'\n'/}"
+          USERNAME="${USERNAME//$'\r'/}"
+
           IMAGE="$USERNAME/devops1-app:$SHORT_TAG"
           echo "Building $IMAGE from ./app..."
           docker build -t "$IMAGE" -f app/Dockerfile app
           echo "Pushing $IMAGE"
           docker push "$IMAGE"
         shell: bash
+
