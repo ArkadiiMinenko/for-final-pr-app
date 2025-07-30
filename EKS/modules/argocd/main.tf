@@ -18,7 +18,7 @@ resource "null_resource" "argocd_app" {
 
   provisioner "local-exec" {
     command = <<EOT
-      aws eks update-kubeconfig --region eu-central-1 --name arkadii-devops7 && \
+      aws eks update-kubeconfig --region eu-central-1 --name arkadii && \
       kubectl apply -f ${path.module}/app.yaml -n argocd --validate=false
     EOT
   }
