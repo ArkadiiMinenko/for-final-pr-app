@@ -38,6 +38,4 @@ module "argocd" {
   namespace = "argocd"
   region    = var.region
   name      = var.name
-
-  depends_on = [null_resource.update_kubeconfig] # або видалити залежно від варіанту
 }
