@@ -36,5 +36,4 @@ module "argocd" {
   region             = var.region
   name               = var.name
   group              = var.group
-
 }

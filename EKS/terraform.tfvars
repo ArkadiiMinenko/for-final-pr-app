@@ -18,7 +18,7 @@ subnets_ids  = ["subnet-0f77887c9e69fc162", "subnet-07bea859869364a5e", "subnet-
 
 
 tags = {
-  Environment = "test-studen1"
+  Environment = "test-arkadii"
   TfControl   = "true"
 }
 
