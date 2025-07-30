@@ -22,19 +22,24 @@ jobs:
         env:
           DOCKER_BUILDKIT: 0
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          TAG: ${{ env.TAG }}
+          TAG: ${{ github.sha }}
         run: |
-          docker build -t $DOCKERHUB_USERNAME/devops1-app:$TAG -f app/Dockerfile app/
-          docker push $DOCKERHUB_USERNAME/devops1-app:$TAG
+          SHORT_TAG=$(echo $TAG | cut -c1-7)
+          docker build -t $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG -f app/Dockerfile app/
+          docker push $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG
+
+          echo "SHORT_TAG=$SHORT_TAG" >> $GITHUB_ENV
+
 
 
 
       - name: Update deployment.yaml with new tag
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          TAG: ${{ env.TAG }}
+          SHORT_TAG: ${{ env.SHORT_TAG }}
         run: |
-          sed -i "s|image: .*/devops1-app:.*|image: $DOCKERHUB_USERNAME/devops1-app:$TAG|" app/deployment.yaml
+          sed -i "s|image: .*/devops1-app:.*|image: $DOCKERHUB_USERNAME/devops1-app:$SHORT_TAG|" app/deployment.yaml
+
 
       - name: Commit & Push updated YAML
         run: |
