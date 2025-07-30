@@ -17,3 +17,4 @@ if __name__ == "__main__":
     server = HTTPServer(("", PORT), SimpleHandler)
     print(f"Listening on 0.0.0.0:{PORT}")
     server.serve_forever()
+
