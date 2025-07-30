@@ -19,7 +19,3 @@ spec:
           image: sterben007/devops1-app:3547ed1
           ports:
             - containerPort: 8000
-
-
-#######
-####

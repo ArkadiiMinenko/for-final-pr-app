@@ -9,7 +9,7 @@ class SimpleHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.end_headers()
             self.wfile.write(f"OK\nPod IP: {pod_ip}\n".encode())
-            self.wfile.write(f"TEEEEEEESTTTTT".encode())
+            #self.wfile.write(f"TEEEEEEESTTTTT".encode())
         else:
             self.send_error(404)
 
@@ -18,5 +18,3 @@ if __name__ == "__main__":
     server = HTTPServer(("", PORT), SimpleHandler)
     print(f"Listening on 0.0.0.0:{PORT}")
     server.serve_forever()
-
-#it's test coment
